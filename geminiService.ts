@@ -3,7 +3,7 @@ import { GoogleGenAI, Type } from "@google/genai";
 import { MENU_ITEMS } from "./constants";
 
 export const getAIRecommendations = async (userInput: string) => {
-  const ai = new GoogleGenAI({ apiKey: process.env.API_KEY || '' });
+  const ai = new GoogleGenAI({ apiKey: process.env.API_KEY });
   
   const menuSummary = MENU_ITEMS.map(item => ({
     id: item.id,
@@ -16,7 +16,17 @@ export const getAIRecommendations = async (userInput: string) => {
   try {
     const response = await ai.models.generateContent({
       model: "gemini-3-flash-preview",
-      contents: `You are a helpful restaurant assistant. Based on this menu: ${JSON.stringify(menuSummary)}, suggest 1-3 items for the user request: "${userInput}". Provide a short reason why.`,
+      contents: `You are Mustafa Elmi's premium AI Assistant. 
+      Menu: ${JSON.stringify(menuSummary)}.
+      User is asking: "${userInput}".
+      
+      CRITICAL: You must explicitly state if the items the user asks about are available. 
+      All items in the provided menu are CURRENTLY AVAILABLE and FRESH. 
+      Be encouraging and confirm freshness.
+      
+      Return JSON with:
+      - reasoning: A polite confirmation of availability and why you recommend these items.
+      - suggestedIds: Array of matching item IDs.`,
       config: {
         responseMimeType: "application/json",
         responseSchema: {
